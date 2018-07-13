@@ -1,0 +1,14 @@
+﻿using System.Collections.Generic;
+using Airport.DAL.Models;
+
+namespace Airport.DAL.Abstractions
+{
+    public interface IRepository<T> where T : Entity
+    {
+        T Get(int id);
+        IEnumerable<T> GetAll();
+        int Insert(T createEntity);
+        bool Update(T updateEntity);
+        bool Delete(int id);
+    }
+}
