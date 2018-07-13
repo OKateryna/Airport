@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Airport.BL.Abstractions;
-using Airport.BL.Dto;
 using Airport.BL.Dto.Flight;
 using Airport.BL.Dto.Ticket;
 using Airport.DAL.Abstractions;

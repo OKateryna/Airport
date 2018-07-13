@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using Airport.BL.Dto;
 using Airport.BL.Dto.Flight;
-using Airport.DAL.Models;
 
 namespace Airport.BL.Abstractions
 {

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Airport.DAL.Models
+namespace Airport.BL.Dto.Plane
 {
-    public class Plane : Entity
+    public class EditablePlaneFields
     {
         public string PlaneName { get; set; }
         public int PlaneTypeId { get; set; }

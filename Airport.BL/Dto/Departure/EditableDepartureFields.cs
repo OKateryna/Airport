@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Airport.DAL.Models
+namespace Airport.BL.Dto.Departure
 {
-    public class Departure : Entity
+    public class EditableDepartureFields
     {
         public int FlightId { get; set; }
         public DateTime DepartureDate { get; set; }

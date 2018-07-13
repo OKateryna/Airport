@@ -1,7 +1,5 @@
 ﻿using Airport.BL.Abstractions;
-using Airport.BL.Dto;
 using Airport.BL.Dto.Flight;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airport.API.Controllers
@@ -24,6 +22,7 @@ namespace Airport.API.Controllers
             return Ok(result);
         }
 
+        // GET api/flights
         [HttpGet]
         public IActionResult Get()
         {

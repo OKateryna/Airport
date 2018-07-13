@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Airport.DAL.Models
+namespace Airport.BL.Dto.Pilot
 {
-    public class Pilot : Entity
+    public class EditablePilotFields
     {
         public string FirstName { get; set; }
         public string SecondName { get; set; }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Airport.DAL.Abstractions;
 using Airport.DAL.Models;
 
 namespace Airport.DAL.Repositories.Seeds

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Airport.API.Filters;
+﻿using Airport.API.Filters;
 using Airport.BL;
 using Airport.BL.Abstractions;
 using Airport.BL.Services;
@@ -14,12 +10,9 @@ using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Airport.API
 {
@@ -53,6 +46,12 @@ namespace Airport.API
 
             services.AddSingleton<IUnitOfWork, SeedUnitOfWork>();
             services.AddScoped<IFlightService, FlightService>();
+            services.AddScoped<ITicketService, TicketService>();
+            services.AddScoped<IStewardessService, StewardessService>();
+            services.AddScoped<IPilotService, PilotService>();
+            services.AddScoped<IPlaneTypeService, PlaneTypeService>();
+            services.AddScoped<ICrewService, CrewService>();
+            services.AddScoped<IDepartureService, DepartureService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
