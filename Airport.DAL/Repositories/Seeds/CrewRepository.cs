@@ -7,10 +7,10 @@ namespace Airport.DAL.Repositories.Seeds
     {
         public CrewRepository()
         {
-            SeedData.Add(new Crew { Id = 1, PilotId = 1, StewardessIds = new int[] { 1, 2 } });
-            SeedData.Add(new Crew { Id = 2, PilotId = 2, StewardessIds = new int[] { 1, 2 } });
-            SeedData.Add(new Crew { Id = 3, PilotId = 1, StewardessIds = new int[] { 1, 3 } });
-            SeedData.Add(new Crew { Id = 4, PilotId = 4, StewardessIds = new int[] { 3, 4 } });
+            SeedData.Add(new Crew { Id = 1, Name = "Alpha" });
+            SeedData.Add(new Crew { Id = 2, Name = "Bravo" });
+            SeedData.Add(new Crew { Id = 3, Name = "Apolo" });
+            SeedData.Add(new Crew { Id = 4, Name = "Delta" });
         }
        
         public override bool Update(Crew crew)
@@ -18,9 +18,7 @@ namespace Airport.DAL.Repositories.Seeds
             var oldCrew = SeedData.FirstOrDefault(c => c.Id == crew.Id);
             if (oldCrew == null)
                 return false;
-
-            oldCrew.PilotId = crew.PilotId;
-            oldCrew.StewardessIds = crew.StewardessIds;
+            oldCrew.Name = crew.Name;
 
             return true;
         }

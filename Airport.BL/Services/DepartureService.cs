@@ -67,19 +67,8 @@ namespace Airport.BL.Services
             var result = _mapper.Map<DepartureDto>(departure);
             result.Flight = GetFlightDto(flight);
             result.Plane = GetPlaneDto(plane);
-            result.Crew = GetCrewDto(crew);
+            result.Crew = _mapper.Map<CrewDto>(crew);
             
-            return result;
-        }
-
-        private CrewDto GetCrewDto(Crew crew)
-        {
-            var pilot = _unitOfWork.PilotRepository.Get(crew.PilotId);
-            var stewardesses = _unitOfWork.StewardessRepository.GetAll().Where(x => crew.StewardessIds.Contains(x.Id));
-            var result = _mapper.Map<CrewDto>(crew);
-            result.Pilot = _mapper.Map<PilotDto>(pilot);
-            result.Stewardesses = stewardesses.Select(stewardess => _mapper.Map<StewardessDto>(stewardess));
-
             return result;
         }
 
@@ -93,9 +82,9 @@ namespace Airport.BL.Services
 
         private FlightDto GetFlightDto(Flight flight)
         {
-            var ticket = _unitOfWork.TicketRepository.Get(flight.TicketId);
+            var tickets = _unitOfWork.TicketRepository.GetAll().Where(x => x.FlightId == flight.Id);
             var result = _mapper.Map<FlightDto>(flight);
-            result.Ticket = _mapper.Map<TicketDto>(ticket);
+            result.Tickets = tickets.Select(ticket => _mapper.Map<TicketDto>(ticket));
             return result;
         }
     }

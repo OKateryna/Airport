@@ -24,13 +24,13 @@ namespace Airport.BL.Services
         public CrewDto GetById(int id)
         {
             var crew = _unitOfWork.CrewRepository.Get(id);
-            return GetCrewDto(crew);
+            return _mapper.Map<CrewDto>(crew);
         }
 
         public IEnumerable<CrewDto> GetAll()
         {
             var results = _unitOfWork.CrewRepository.GetAll();
-            return results.Select(GetCrewDto);
+            return results.Select(crew => _mapper.Map<CrewDto>(crew));
         }
 
         public int Insert(EditableCrewFields createCrewRequest)
@@ -54,15 +54,15 @@ namespace Airport.BL.Services
             return _unitOfWork.CrewRepository.Delete(id);
         }
 
-        private CrewDto GetCrewDto(Crew crew)
-        {
-            var pilot = _unitOfWork.PilotRepository.Get(crew.PilotId);
-            var stewardesses = _unitOfWork.StewardessRepository.GetAll().Where(x => crew.StewardessIds.Contains(x.Id));
-            var result = _mapper.Map<CrewDto>(crew);
-            result.Pilot = _mapper.Map<PilotDto>(pilot);
-            result.Stewardesses = stewardesses.Select(stewardess => _mapper.Map<StewardessDto>(stewardess));
+        //private CrewDto GetCrewDto(Crew crew)
+        //{
+        //    var pilot = _unitOfWork.PilotRepository.Get(crew.PilotId);
+        //    var stewardesses = _unitOfWork.StewardessRepository.GetAll().Where(x => crew.StewardessIds.Contains(x.Id));
+        //    var result = _mapper.Map<CrewDto>(crew);
+        //    result.Pilot = _mapper.Map<PilotDto>(pilot);
+        //    result.Stewardesses = stewardesses.Select(stewardess => _mapper.Map<StewardessDto>(stewardess));
 
-            return result;
-        }
+        //    return result;
+        //}
     }
 }

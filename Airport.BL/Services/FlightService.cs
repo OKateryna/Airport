@@ -55,9 +55,9 @@ namespace Airport.BL.Services
 
         private FlightDto GetFlightDto(Flight flight)
         {
-            var ticket = _unitOfWork.TicketRepository.Get(flight.TicketId);
+            var tickets = _unitOfWork.TicketRepository.GetAll().Where(x => x.FlightId == flight.Id);
             var result = _mapper.Map<FlightDto>(flight);
-            result.Ticket = _mapper.Map<TicketDto>(ticket);
+            result.Tickets = tickets.Select(ticket => _mapper.Map<TicketDto>(ticket));
             return result;
         }
     }

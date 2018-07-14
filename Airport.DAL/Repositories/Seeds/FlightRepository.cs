@@ -15,9 +15,8 @@ namespace Airport.DAL.Repositories.Seeds
                 TimeDeparture = new DateTime(2016, 12, 5, 23, 15, 00),
                 PlaceDeparture = "London",
                 Destination = "Paris",
-                TimeDestination = new DateTime(2016, 12, 6, 00, 15, 00),
-                TicketId = 3
-            });
+                TimeDestination = new DateTime(2016, 12, 6, 00, 15, 00)
+            }); 
             SeedData.Add(new Flight
             {
                 Id = 2,
@@ -25,8 +24,7 @@ namespace Airport.DAL.Repositories.Seeds
                 TimeDeparture = new DateTime(2017, 11, 23, 13, 10, 00),
                 PlaceDeparture = "Lviv",
                 Destination = "Habana",
-                TimeDestination = new DateTime(2017, 11, 23, 23, 55, 00),
-                TicketId = 2
+                TimeDestination = new DateTime(2017, 11, 23, 23, 55, 00)
             });
             SeedData.Add(new Flight
             {
@@ -35,8 +33,7 @@ namespace Airport.DAL.Repositories.Seeds
                 TimeDeparture = new DateTime(2018, 5, 11, 7, 30, 00),
                 PlaceDeparture = "Habana",
                 Destination = "London",
-                TimeDestination = new DateTime(2018, 5, 11, 16, 10, 00),
-                TicketId = 1
+                TimeDestination = new DateTime(2018, 5, 11, 16, 10, 00)
             });
             SeedData.Add(new Flight
             {
@@ -46,7 +43,6 @@ namespace Airport.DAL.Repositories.Seeds
                 PlaceDeparture = "Lisbon",
                 Destination = "Paris",
                 TimeDestination = new DateTime(2017, 9, 7, 10, 30, 00),
-                TicketId = 4
             });
         }
 
@@ -60,7 +56,6 @@ namespace Airport.DAL.Repositories.Seeds
             oldFlight.Destination = flight.Destination;
             oldFlight.Number = flight.Number;
             oldFlight.PlaceDeparture = flight.PlaceDeparture;
-            oldFlight.TicketId = flight.TicketId;
             oldFlight.TimeDeparture = flight.TimeDeparture;
             oldFlight.TimeDestination = flight.TimeDestination;
 

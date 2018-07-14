@@ -17,8 +17,8 @@ namespace Airport.BL
         {
             CreateMap<Flight, EditableFlightFields>();
             CreateMap<EditableFlightFields, Flight>();
-            CreateMap<Flight, FlightDto>().ForMember(x => x.Ticket, opt => opt.Ignore());
-            CreateMap<FlightDto, Flight>().ForMember(x => x.TicketId, opt => opt.Ignore());
+            CreateMap<Flight, FlightDto>();
+            CreateMap<FlightDto, Flight>();
 
             CreateMap<Ticket, EditableTicketFields>();
             CreateMap<EditableTicketFields, Ticket>();
@@ -47,8 +47,8 @@ namespace Airport.BL
 
             CreateMap<Crew, EditableCrewFields>();
             CreateMap<EditableCrewFields, Crew>();
-            CreateMap<Crew, CrewDto>().ForMember(x => x.Pilot, opt => opt.Ignore()).ForMember(x => x.Stewardesses, opt => opt.Ignore());
-            CreateMap<CrewDto, Crew>().ForMember(x => x.PilotId, opt => opt.Ignore()).ForMember(x => x.StewardessIds, opt => opt.Ignore());
+            CreateMap<Crew, CrewDto>();
+            CreateMap<CrewDto, Crew>();
 
             CreateMap<Departure, EditableDepartureFields>();
             CreateMap<EditableDepartureFields, Departure>();

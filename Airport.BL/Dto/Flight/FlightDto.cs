@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Airport.BL.Dto.Ticket;
 
 namespace Airport.BL.Dto.Flight
@@ -11,6 +12,6 @@ namespace Airport.BL.Dto.Flight
         public DateTime TimeDeparture { get; set; }
         public string Destination { get; set; }
         public DateTime TimeDestination { get; set; }
-        public TicketDto Ticket { get; set; }
+        public IEnumerable<TicketDto> Tickets { get; set; }
     }
 }

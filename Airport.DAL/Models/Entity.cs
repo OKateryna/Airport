@@ -1,7 +1,10 @@
-﻿namespace Airport.DAL.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Airport.DAL.Models
 {
     public class Entity
     {
+        [Key]
         public int Id { get; set; }
     }
 }
