@@ -34,7 +34,11 @@ namespace Airport.BL.Services
 
         public int Insert(EditableFlightFields createFlightRequest)
         {
-            return _unitOfWork.FlightRepository.Insert(_mapper.Map<Flight>(createFlightRequest));
+            var entityToUpdate = _mapper.Map<Flight>(createFlightRequest);
+            _unitOfWork.FlightRepository.Insert(entityToUpdate);
+            _unitOfWork.FlightRepository.Save();
+
+            return entityToUpdate.Id;
         }
 
         public bool Update(int id, EditableFlightFields updateFlightRequest)

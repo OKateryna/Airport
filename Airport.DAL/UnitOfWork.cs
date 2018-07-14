@@ -3,9 +3,9 @@ using Airport.DAL.Models;
 
 namespace Airport.DAL
 {
-    public class SeedUnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
-        public SeedUnitOfWork(IRepository<Flight> flightRepository, IRepository<Ticket> ticketRepository, IRepository<Departure> departureRepository, IRepository<Stewardess> stewardessRepository, IRepository<Pilot> pilotRepository, IRepository<Crew> crewRepository, IRepository<Plane> planeRepository, IRepository<PlaneType> planeTypeRepository)
+        public UnitOfWork(IRepository<Flight> flightRepository, IRepository<Ticket> ticketRepository, IRepository<Departure> departureRepository, IRepository<Stewardess> stewardessRepository, IRepository<Pilot> pilotRepository, IRepository<Crew> crewRepository, IRepository<Plane> planeRepository, IRepository<PlaneType> planeTypeRepository)
         {
             FlightRepository = flightRepository;
             TicketRepository = ticketRepository;

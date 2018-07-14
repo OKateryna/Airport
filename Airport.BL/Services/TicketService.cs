@@ -34,7 +34,11 @@ namespace Airport.BL.Services
 
         public int Insert(EditableTicketFields editableTicketFields)
         {
-            return _unitOfWork.TicketRepository.Insert(_mapper.Map<Ticket>(editableTicketFields));
+            var entityToUpdate = _mapper.Map<Ticket>(editableTicketFields);
+            _unitOfWork.TicketRepository.Insert(entityToUpdate);
+            _unitOfWork.TicketRepository.Save();
+
+            return entityToUpdate.Id;
         }
 
         public bool Update(int id, EditableTicketFields editableTicketFields)

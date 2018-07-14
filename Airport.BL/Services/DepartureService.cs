@@ -40,7 +40,11 @@ namespace Airport.BL.Services
 
         public int Insert(EditableDepartureFields createDepartureRequest)
         {
-            return _unitOfWork.DepartureRepository.Insert(_mapper.Map<Departure>(createDepartureRequest));
+            var entityToUpdate = _mapper.Map<Departure>(createDepartureRequest);
+            _unitOfWork.DepartureRepository.Insert(entityToUpdate);
+            _unitOfWork.DepartureRepository.Save();
+
+            return entityToUpdate.Id;
         }
 
         public bool Update(int id, EditableDepartureFields updateDepartureRequest)

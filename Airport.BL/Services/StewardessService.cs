@@ -33,7 +33,11 @@ namespace Airport.BL.Services
 
         public int Insert(EditableStewardessFields createStewardessRequest)
         {
-            return _unitOfWork.StewardessRepository.Insert(_mapper.Map<Stewardess>(createStewardessRequest));
+            var entityToUpdate = _mapper.Map<Stewardess>(createStewardessRequest);
+            _unitOfWork.StewardessRepository.Insert(entityToUpdate);
+            _unitOfWork.StewardessRepository.Save();
+
+            return entityToUpdate.Id;
         }
 
         public bool Update(int id, EditableStewardessFields updateStewardessRequest)

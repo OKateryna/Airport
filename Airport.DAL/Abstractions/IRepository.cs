@@ -7,8 +7,9 @@ namespace Airport.DAL.Abstractions
     {
         T Get(int id);
         IEnumerable<T> GetAll();
-        int Insert(T createEntity);
+        void Insert(T createEntity);
         bool Update(T updateEntity);
         bool Delete(int id);
+        void Save();
     }
 }

@@ -33,7 +33,11 @@ namespace Airport.BL.Services
 
         public int Insert(EditablePilotFields createPilotRequest)
         {
-            return _unitOfWork.PilotRepository.Insert(_mapper.Map<Pilot>(createPilotRequest));
+            var entityToUpdate = _mapper.Map<Pilot>(createPilotRequest);
+            _unitOfWork.PilotRepository.Insert(entityToUpdate);
+            _unitOfWork.PilotRepository.Save();
+
+            return entityToUpdate.Id;
         }
 
         public bool Update(int id, EditablePilotFields updatePilotRequest)

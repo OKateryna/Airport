@@ -33,19 +33,28 @@ namespace Airport.BL.Services
 
         public int Insert(EditablePlaneTypeFields createPlaneTypeRequest)
         {
-            return _unitOfWork.PlaneTypeRepository.Insert(_mapper.Map<PlaneType>(createPlaneTypeRequest));
+            var entityToUpdate = _mapper.Map<PlaneType>(createPlaneTypeRequest);
+            _unitOfWork.PlaneTypeRepository.Insert(entityToUpdate);
+            _unitOfWork.PlaneTypeRepository.Save();
+
+            return entityToUpdate.Id;
         }
 
         public bool Update(int id, EditablePlaneTypeFields updatePlaneTypeRequest)
         {
             var planeTypeToUpdate = _mapper.Map<PlaneType>(updatePlaneTypeRequest);
             planeTypeToUpdate.Id = id;
-            return _unitOfWork.PlaneTypeRepository.Update(planeTypeToUpdate);
+            var result = _unitOfWork.PlaneTypeRepository.Update(planeTypeToUpdate);
+            _unitOfWork.PlaneTypeRepository.Save();
+
+            return result;
         }
 
         public bool Delete(int id)
         {
-            return _unitOfWork.PlaneTypeRepository.Delete(id);
+            var result = _unitOfWork.PlaneTypeRepository.Delete(id);
+            _unitOfWork.PlaneTypeRepository.Save();
+            return result;
         }
     }
 }

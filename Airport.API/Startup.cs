@@ -1,9 +1,11 @@
-﻿using Airport.API.Filters;
+﻿using System;
+using Airport.API.Filters;
 using Airport.BL;
 using Airport.BL.Abstractions;
 using Airport.BL.Services;
 using Airport.DAL;
 using Airport.DAL.Abstractions;
+using Airport.DAL.EntityFramework.Repositories;
 using Airport.DAL.Models;
 using Airport.DAL.Repositories.Seeds;
 using AutoMapper;
@@ -11,6 +13,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,18 +36,12 @@ namespace Airport.API
             ConfigureDependencyInjection(services);
         }
 
-        private static void ConfigureDependencyInjection(IServiceCollection services)
+        private void ConfigureDependencyInjection(IServiceCollection services)
         {
-            services.AddSingleton<IRepository<Flight>, FlightRepository>(); //TODO: rewrite to scoped when DB is present
-            services.AddSingleton<IRepository<Crew>, CrewRepository>(); //TODO: rewrite to scoped when DB is present
-            services.AddSingleton<IRepository<Departure>, DepartureRepository>(); //TODO: rewrite to scoped when DB is present
-            services.AddSingleton<IRepository<Pilot>, PilotRepository>(); //TODO: rewrite to scoped when DB is present
-            services.AddSingleton<IRepository<Stewardess>, StewardessRepository>(); //TODO: rewrite to scoped when DB is present
-            services.AddSingleton<IRepository<Ticket>, TicketRepository>(); //TODO: rewrite to scoped when DB is present
-            services.AddSingleton<IRepository<Plane>, PlaneRepository>(); //TODO: rewrite to scoped when DB is present
-            services.AddSingleton<IRepository<PlaneType>, PlaneTypeRepository>(); //TODO: rewrite to scoped when DB is present
-
-            services.AddSingleton<IUnitOfWork, SeedUnitOfWork>();
+            // ConfigureSeedDataSource(services); fake generated data
+            ConfigureEfDataSource(services);
+            
+            services.AddSingleton<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IFlightService, FlightService>();
             services.AddScoped<ITicketService, TicketService>();
             services.AddScoped<IStewardessService, StewardessService>();
@@ -52,6 +49,26 @@ namespace Airport.API
             services.AddScoped<IPlaneTypeService, PlaneTypeService>();
             services.AddScoped<ICrewService, CrewService>();
             services.AddScoped<IDepartureService, DepartureService>();
+        }
+
+        private void ConfigureEfDataSource(IServiceCollection services)
+        {
+            string connectionStr = Configuration.GetConnectionString("AirportDbString");
+            services.AddDbContext<Airport.DAL.EntityFramework.DataContext>(options => options.UseSqlServer(connectionStr, b => b.UseRowNumberForPaging()));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        }
+
+        private static void ConfigureSeedDataSource(IServiceCollection services)
+        {
+            services.AddSingleton<IRepository<Flight>, FlightRepository>();  
+            services.AddSingleton<IRepository<Crew>, CrewRepository>();  
+            services.AddSingleton<IRepository<Departure>, DepartureRepository>();  
+            services.AddSingleton<IRepository<Pilot>, PilotRepository>();  
+            services.AddSingleton<IRepository<Stewardess>, StewardessRepository>();  
+            services.AddSingleton<IRepository<Ticket>, TicketRepository>();  
+            services.AddSingleton<IRepository<Plane>, PlaneRepository>();  
+            services.AddSingleton<IRepository<PlaneType>, PlaneTypeRepository>();  
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -34,7 +34,11 @@ namespace Airport.BL.Services
 
         public int Insert(EditablePlaneFields createPlaneRequest)
         {
-            return _unitOfWork.PlaneRepository.Insert(_mapper.Map<Plane>(createPlaneRequest));
+            var entityToUpdate = _mapper.Map<Plane>(createPlaneRequest);
+            _unitOfWork.PlaneRepository.Insert(entityToUpdate);
+            _unitOfWork.PlaneRepository.Save();
+
+            return entityToUpdate.Id;
         }
 
         public bool Update(int id, EditablePlaneFields updatePlaneRequest)

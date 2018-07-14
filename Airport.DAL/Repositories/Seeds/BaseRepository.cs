@@ -24,11 +24,10 @@ namespace Airport.DAL.Repositories.Seeds
             return SeedData;
         }
 
-        public int Insert(T createEntity)
+        public void Insert(T createEntity)
         {
             createEntity.Id = SeedData.Max(x => x.Id);
             SeedData.Add(createEntity);
-            return createEntity.Id;
         }
 
         public abstract bool Update(T updateEntity);
@@ -41,6 +40,11 @@ namespace Airport.DAL.Repositories.Seeds
 
             SeedData.Remove(entityToDelete);
             return true;
+        }
+
+        public void Save()
+        {
+
         }
     }
 }

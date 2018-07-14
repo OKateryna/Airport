@@ -35,7 +35,11 @@ namespace Airport.BL.Services
 
         public int Insert(EditableCrewFields createCrewRequest)
         {
-            return _unitOfWork.CrewRepository.Insert(_mapper.Map<Crew>(createCrewRequest));
+            var entityToUpdate = _mapper.Map<Crew>(createCrewRequest);
+            _unitOfWork.CrewRepository.Insert(entityToUpdate);
+            _unitOfWork.CrewRepository.Save();
+
+            return entityToUpdate.Id;
         }
 
         public bool Update(int id, EditableCrewFields updateCrewRequest)
