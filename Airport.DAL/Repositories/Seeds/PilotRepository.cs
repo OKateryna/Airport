@@ -42,7 +42,6 @@ namespace Airport.DAL.Repositories.Seeds
             });
         }
 
-       
         public override bool Update(Pilot pilot)
         {
             var oldPilot = SeedData.FirstOrDefault(p => p.Id == pilot.Id);

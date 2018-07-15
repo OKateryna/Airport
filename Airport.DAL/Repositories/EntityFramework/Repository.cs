@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Airport.DAL.EntityFramework.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : Entity, IDisposable
+    public class Repository<T> : IDisposable, IRepository<T> where T : Entity
     {
         private DbContext _context;
         private DbSet<T> _dbSet;

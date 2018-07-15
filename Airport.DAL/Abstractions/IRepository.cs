@@ -3,7 +3,7 @@ using Airport.DAL.Models;
 
 namespace Airport.DAL.Abstractions
 {
-    public interface IRepository<T> where T : Entity
+    public interface IRepository<T>
     {
         T Get(int id);
         IEnumerable<T> GetAll();

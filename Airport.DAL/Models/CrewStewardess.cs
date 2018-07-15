@@ -7,8 +7,8 @@ namespace Airport.DAL.Models
     public class CrewStewardess
     {
         public int CrewId { get; set; }
-        public Crew Crew { get; set; }
+        public virtual Crew Crew { get; set; }
         public int StewardessId { get; set; }
-        public Stewardess Stewardess { get; set; }
+        public virtual Stewardess Stewardess { get; set; }
     }
 }

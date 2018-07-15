@@ -5,6 +5,7 @@ using Airport.BL.Abstractions;
 using Airport.BL.Services;
 using Airport.DAL;
 using Airport.DAL.Abstractions;
+using Airport.DAL.EntityFramework;
 using Airport.DAL.EntityFramework.Repositories;
 using Airport.DAL.Models;
 using Airport.DAL.Repositories.Seeds;
@@ -41,7 +42,6 @@ namespace Airport.API
             // ConfigureSeedDataSource(services); fake generated data
             ConfigureEfDataSource(services);
             
-            services.AddSingleton<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IFlightService, FlightService>();
             services.AddScoped<ITicketService, TicketService>();
             services.AddScoped<IStewardessService, StewardessService>();
@@ -54,8 +54,11 @@ namespace Airport.API
         private void ConfigureEfDataSource(IServiceCollection services)
         {
             string connectionStr = Configuration.GetConnectionString("AirportDbString");
-            services.AddDbContext<Airport.DAL.EntityFramework.DataContext>(options => options.UseSqlServer(connectionStr, b => b.UseRowNumberForPaging()));
+            services.AddDbContext<DataContext>(options => options.UseLazyLoadingProxies().UseSqlServer(connectionStr, b => b.UseRowNumberForPaging()));
+            services.AddScoped(typeof(DbContext), typeof(DataContext));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         private static void ConfigureSeedDataSource(IServiceCollection services)
@@ -67,8 +70,9 @@ namespace Airport.API
             services.AddSingleton<IRepository<Stewardess>, StewardessRepository>();  
             services.AddSingleton<IRepository<Ticket>, TicketRepository>();  
             services.AddSingleton<IRepository<Plane>, PlaneRepository>();  
-            services.AddSingleton<IRepository<PlaneType>, PlaneTypeRepository>();  
+            services.AddSingleton<IRepository<PlaneType>, PlaneTypeRepository>();
 
+            services.AddSingleton<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

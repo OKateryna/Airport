@@ -12,6 +12,6 @@ namespace Airport.BL.Dto.Flight
         public DateTime TimeDeparture { get; set; }
         public string Destination { get; set; }
         public DateTime TimeDestination { get; set; }
-        public IEnumerable<TicketDto> Tickets { get; set; }
+        public virtual ICollection<TicketDto> Tickets { get; set; }
     }
 }

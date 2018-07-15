@@ -14,7 +14,7 @@ namespace Airport.DAL.Repositories.Seeds
                 PlaneName = "Sukhoi SuperJet",
                 ManufectureDate = new DateTime(2009, 12, 5, 23, 15, 00),
                 PlaneTypeId = 3,
-                LifeSpan = new TimeSpan(3600, 0, 0, 0)
+                LifeSpan = 10
             });
             SeedData.Add(new Plane
             {
@@ -22,7 +22,7 @@ namespace Airport.DAL.Repositories.Seeds
                 PlaneName = "Airbus",
                 ManufectureDate = new DateTime(2018, 12, 5, 23, 15, 00),
                 PlaneTypeId = 2,
-                LifeSpan = new TimeSpan(1800, 0, 0, 0)
+                LifeSpan = 6
             });
             SeedData.Add(new Plane
             {
@@ -30,7 +30,7 @@ namespace Airport.DAL.Repositories.Seeds
                 PlaneName = "Tupolev",
                 ManufectureDate = new DateTime(2016, 5, 11, 7, 30, 00),
                 PlaneTypeId = 4,
-                LifeSpan = new TimeSpan(4200, 0, 0, 0)
+                LifeSpan = 12
             });
             SeedData.Add(new Plane
             {
@@ -38,7 +38,7 @@ namespace Airport.DAL.Repositories.Seeds
                 PlaneName = "Boeing",
                 ManufectureDate = new DateTime(2000, 9, 7, 8, 00, 00),
                 PlaneTypeId = 1,
-                LifeSpan = new TimeSpan(7200, 0, 0, 0)
+                LifeSpan = 20
             });
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Airport.BL.Abstractions;
 using Airport.BL.Dto.Crew;
@@ -24,29 +25,61 @@ namespace Airport.BL.Services
         public CrewDto GetById(int id)
         {
             var crew = _unitOfWork.CrewRepository.Get(id);
-            return _mapper.Map<CrewDto>(crew);
+            return GetCrewDto(crew);
         }
 
         public IEnumerable<CrewDto> GetAll()
         {
             var results = _unitOfWork.CrewRepository.GetAll();
-            return results.Select(crew => _mapper.Map<CrewDto>(crew));
+
+            return results.Select(GetCrewDto);
+        }
+
+        private CrewDto GetCrewDto(Crew crew)
+        {
+            var crewDto = _mapper.Map<CrewDto>(crew);
+            crewDto.Pilot = _mapper.Map<PilotDto>(crew.CrewPilot.Pilot);
+            crewDto.Stewardesses = crew.CrewStewardesses.Select(cs => _mapper.Map<StewardessDto>(cs.Stewardess));
+            return crewDto;
         }
 
         public int Insert(EditableCrewFields createCrewRequest)
         {
-            var entityToUpdate = _mapper.Map<Crew>(createCrewRequest);
-            _unitOfWork.CrewRepository.Insert(entityToUpdate);
+            var entityToInsert = _mapper.Map<Crew>(createCrewRequest);
+            _unitOfWork.CrewRepository.Insert(entityToInsert);
             _unitOfWork.CrewRepository.Save();
 
-            return entityToUpdate.Id;
+            UpdateCrew(entityToInsert, createCrewRequest);
+
+            return entityToInsert.Id;
         }
 
         public bool Update(int id, EditableCrewFields updateCrewRequest)
         {
             var crewToUpdate = _mapper.Map<Crew>(updateCrewRequest);
             crewToUpdate.Id = id;
-            return _unitOfWork.CrewRepository.Update(crewToUpdate);
+
+            return UpdateCrew(crewToUpdate, updateCrewRequest);
+        }
+
+        private bool UpdateCrew(Crew crew, EditableCrewFields editableCrewFields)
+        {
+            crew.CrewPilot = new CrewPilot
+            {
+                CrewId = crew.Id,
+                PilotId = editableCrewFields.PilotId
+            };
+
+            crew.CrewStewardesses = editableCrewFields.StewardessIds.Select(x => new CrewStewardess
+            {
+                CrewId = crew.Id,
+                StewardessId = x
+            }).ToList();
+
+            _unitOfWork.CrewRepository.Update(crew);
+            _unitOfWork.CrewRepository.Save();
+
+            return true;
         }
 
         public bool Delete(int id)
