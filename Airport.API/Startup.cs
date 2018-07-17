@@ -56,7 +56,7 @@ namespace Airport.API
 
         private void ConfigureEfDataSource(IServiceCollection services)
         {
-            string connectionStr = Configuration.GetConnectionString("AirportDbString");
+            string connectionStr = Configuration.GetConnectionString("AirportDbString") ?? "Data Source=.\\SQLEXPRESS;Initial Catalog=AirportDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"; // hack for integration test
             services.AddDbContext<DataContext>(options => options.UseLazyLoadingProxies().UseSqlServer(connectionStr, b => b.UseRowNumberForPaging()));
             services.AddScoped(typeof(DbContext), typeof(DataContext));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
