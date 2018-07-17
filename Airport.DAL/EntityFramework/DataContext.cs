@@ -62,6 +62,21 @@ namespace Airport.DAL.EntityFramework
                 .WithMany(s => s.CrewStewardesses)
                 .HasForeignKey(cs => cs.StewardessId);
 
+            modelBuilder.Entity<Departure>()
+                .HasOne(d => d.Crew)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Departure>()
+                .HasOne(d => d.Flight)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Departure>()
+                .HasOne(d => d.Plane)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
             SeedData(modelBuilder);
         }
 

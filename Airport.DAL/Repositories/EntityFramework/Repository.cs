@@ -1,10 +1,10 @@
-﻿using Airport.DAL.Abstractions;
-using Airport.DAL.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Airport.DAL.Abstractions;
+using Airport.DAL.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Airport.DAL.EntityFramework.Repositories
+namespace Airport.DAL.Repositories.EntityFramework
 {
     public class Repository<T> : IDisposable, IRepository<T> where T : Entity
     {

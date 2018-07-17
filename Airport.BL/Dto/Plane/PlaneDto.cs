@@ -9,6 +9,6 @@ namespace Airport.BL.Dto.Plane
         public string PlaneName { get; set; }
         public PlaneTypeDto PlaneType { get; set; }
         public DateTime ManufectureDate { get; set; }
-        public TimeSpan LifeSpan { get; set; }
+        public int LifeSpan { get; set; }
     }
 }

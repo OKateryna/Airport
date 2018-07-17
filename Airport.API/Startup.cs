@@ -6,8 +6,8 @@ using Airport.BL.Services;
 using Airport.DAL;
 using Airport.DAL.Abstractions;
 using Airport.DAL.EntityFramework;
-using Airport.DAL.EntityFramework.Repositories;
 using Airport.DAL.Models;
+using Airport.DAL.Repositories.EntityFramework;
 using Airport.DAL.Repositories.Seeds;
 using AutoMapper;
 using FluentValidation.AspNetCore;
@@ -32,7 +32,10 @@ namespace Airport.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(opt => opt.Filters.Add(typeof(ValidatorActionFilter))).SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddFluentValidation();
+            services
+                .AddMvc(opt => opt.Filters.Add(typeof(ValidatorActionFilter)))
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
             services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
             ConfigureDependencyInjection(services);
         }

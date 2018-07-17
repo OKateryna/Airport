@@ -193,19 +193,19 @@ namespace Airport.DAL.Migrations
                         column: x => x.CrewId,
                         principalTable: "Crews",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Departures_Flights_FlightId",
                         column: x => x.FlightId,
                         principalTable: "Flights",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Departures_Planes_PlaneId",
                         column: x => x.PlaneId,
                         principalTable: "Planes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
