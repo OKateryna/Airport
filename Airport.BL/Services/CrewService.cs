@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Airport.BL.Abstractions;
 using Airport.BL.Dto.Crew;
 using Airport.BL.Dto.Pilot;
@@ -22,47 +23,59 @@ namespace Airport.BL.Services
             _mapper = mapper;
         }
 
-        public CrewDto GetById(int id)
+        public async Task<CrewDto> GetById(int id)
         {
-            var crew = _unitOfWork.CrewRepository.Get(id);
-            return GetCrewDto(crew);
+            var crew = await _unitOfWork.CrewRepository.Get(id);
+            return await GetCrewDto(crew);
         }
 
-        public IEnumerable<CrewDto> GetAll()
+        public async Task<IEnumerable<CrewDto>> GetAll()
         {
-            var results = _unitOfWork.CrewRepository.GetAll();
+            var crews = await _unitOfWork.CrewRepository.GetAll();
+            var crewDto = await Task.WhenAll(crews.Select(GetCrewDto));
 
-            return results.Select(GetCrewDto);
+            return crewDto.Where(x => x != null);
         }
 
-        private CrewDto GetCrewDto(Crew crew)
+        private async Task<CrewDto> GetCrewDto(Crew crew)
         {
             var crewDto = _mapper.Map<CrewDto>(crew);
-            crewDto.Pilot = _mapper.Map<PilotDto>(crew.CrewPilot.Pilot);
-            crewDto.Stewardesses = crew.CrewStewardesses.Select(cs => _mapper.Map<StewardessDto>(cs.Stewardess));
+            var pilot = crew.CrewPilot.Pilot ?? await _unitOfWork.PilotRepository.Get(crew.CrewPilot.PilotId);
+            crewDto.Pilot = _mapper.Map<PilotDto>(pilot);
+            crewDto.Stewardesses = await GetStewardessesDtoFromCrewStewardesses(crew.CrewStewardesses);
             return crewDto;
         }
 
-        public int Insert(EditableCrewFields createCrewRequest)
+        private async Task<IEnumerable<StewardessDto>> GetStewardessesDtoFromCrewStewardesses(ICollection<CrewStewardess> crewCrewStewardesses)
+        {
+            var result = crewCrewStewardesses.Select(async x =>
+            {
+                var stewardess = x.Stewardess ?? await _unitOfWork.StewardessRepository.Get(x.StewardessId);
+                return _mapper.Map<StewardessDto>(stewardess);
+            });
+
+            return await Task.WhenAll(result);
+        }
+
+        public async Task<int> Insert(EditableCrewFields createCrewRequest)
         {
             var entityToInsert = _mapper.Map<Crew>(createCrewRequest);
-            _unitOfWork.CrewRepository.Insert(entityToInsert);
-            _unitOfWork.CrewRepository.Save();
-
-            UpdateCrew(entityToInsert, createCrewRequest);
+            await _unitOfWork.CrewRepository.Insert(entityToInsert);
+            await _unitOfWork.SaveChangesAsync();
+            await UpdateCrew(entityToInsert, createCrewRequest);
 
             return entityToInsert.Id;
         }
 
-        public bool Update(int id, EditableCrewFields updateCrewRequest)
+        public async Task<bool> Update(int id, EditableCrewFields updateCrewRequest)
         {
             var crewToUpdate = _mapper.Map<Crew>(updateCrewRequest);
             crewToUpdate.Id = id;
 
-            return UpdateCrew(crewToUpdate, updateCrewRequest);
+            return await UpdateCrew(crewToUpdate, updateCrewRequest);
         }
 
-        private bool UpdateCrew(Crew crew, EditableCrewFields editableCrewFields)
+        private async Task<bool> UpdateCrew(Crew crew, EditableCrewFields editableCrewFields)
         {
             crew.CrewPilot = new CrewPilot
             {
@@ -76,15 +89,15 @@ namespace Airport.BL.Services
                 StewardessId = x
             }).ToList();
 
-            _unitOfWork.CrewRepository.Update(crew);
-            _unitOfWork.CrewRepository.Save();
+            var updateResult = await _unitOfWork.CrewRepository.Update(crew);
+            await _unitOfWork.SaveChangesAsync();
 
-            return true;
+            return updateResult;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            return _unitOfWork.CrewRepository.Delete(id);
+            return await _unitOfWork.CrewRepository.Delete(id);
         }
 
         //private CrewDto GetCrewDto(Crew crew)

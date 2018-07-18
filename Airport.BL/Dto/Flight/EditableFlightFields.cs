@@ -9,6 +9,6 @@ namespace Airport.BL.Dto.Flight
         public DateTime TimeDeparture { get; set; }
         public string Destination { get; set; }
         public DateTime TimeDestination { get; set; }
-        public int TicketId { get; set; }
+        public int[] TicketIds { get; set; }
     }
 }

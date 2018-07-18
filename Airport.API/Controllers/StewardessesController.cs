@@ -1,4 +1,5 @@
-﻿using Airport.BL.Abstractions;
+﻿using System.Threading.Tasks;
+using Airport.BL.Abstractions;
 using Airport.BL.Dto.Stewardess;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,26 +17,26 @@ namespace Airport.API.Controllers
 
         // GET api/stewardesss/5
         [HttpGet("{id}", Name = "GetStewardess")]
-        public IActionResult Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            var result = _stewardessService.GetById(id);
+            var result = await _stewardessService.GetById(id);
             return Ok(result);
         }
 
         // GET api/stewardesss
         [HttpGet]
-        public IActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            var results = _stewardessService.GetAll();
+            var results = await _stewardessService.GetAll();
             return Ok(results);
         }
 
         // POST api/stewardesss
         [HttpPost]
-        public IActionResult Post([FromBody] EditableStewardessFields createStewardessRequest)
+        public async Task<ActionResult> Post([FromBody] EditableStewardessFields createStewardessRequest)
         {
-            var insertedId = _stewardessService.Insert(createStewardessRequest);
-            var result = _stewardessService.GetById(insertedId);
+            var insertedId = await _stewardessService.Insert(createStewardessRequest);
+            var result = await _stewardessService.GetById(insertedId);
 
             var url = Url.Link("GetStewardess", new {id = result.Id});
 
@@ -44,9 +45,9 @@ namespace Airport.API.Controllers
 
         // PUT api/stewardesss/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] EditableStewardessFields updateStewardessRequest)
+        public async Task<ActionResult> Put(int id, [FromBody] EditableStewardessFields updateStewardessRequest)
         {
-            var success = _stewardessService.Update(id, updateStewardessRequest);
+            var success = await _stewardessService.Update(id, updateStewardessRequest);
             if (success)
             {
                 return Ok();
@@ -57,9 +58,9 @@ namespace Airport.API.Controllers
 
         // DELETE api/stewardesss/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var success = _stewardessService.Delete(id);
+            var success = await _stewardessService.Delete(id);
             if (success)
             {
                 return Ok();

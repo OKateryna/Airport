@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Airport.DAL.Abstractions;
 using Airport.DAL.Models;
 using Microsoft.EntityFrameworkCore;
@@ -11,46 +12,42 @@ namespace Airport.DAL.Repositories.EntityFramework
         private DbContext _context;
         private DbSet<T> _dbSet;
 
-
         public Repository(DbContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return _dbSet;
+            return await _dbSet.ToListAsync();
         }
 
-        public T Get(int id)
+        public async Task<T> Get(int id)
         {
-            return _dbSet.Find(id);
+            return await _dbSet.FindAsync(id);
         }
 
-        public void Insert(T createEntity)
+        public async Task Insert(T createEntity)
         {
-            _dbSet.Add(createEntity);
+            await _dbSet.AddAsync(createEntity);
         }
 
-        public bool Update(T updateEntity)
+        public async Task<bool> Update(T updateEntity)
         {
-            _context.Entry(updateEntity).State = EntityState.Modified;
-            return true;
+            return await Task.Run(() =>
+            {
+                _context.Entry(updateEntity).State = EntityState.Modified;
+                return true;
+            });
         }
 
-        public bool Delete(int Id)
+        public async Task<bool> Delete(int id)
         {
-            T getObjById = _dbSet.Find(Id);
+            T getObjById = await _dbSet.FindAsync(id);
             _dbSet.Remove(getObjById);
             return true;
         }
-
-        public void Save()
-        {
-            _context.SaveChanges();
-        }
-
 
         public void Dispose()
         {

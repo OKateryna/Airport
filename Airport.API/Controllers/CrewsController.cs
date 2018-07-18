@@ -1,4 +1,5 @@
-﻿using Airport.BL.Abstractions;
+﻿using System.Threading.Tasks;
+using Airport.BL.Abstractions;
 using Airport.BL.Dto.Crew;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,26 +17,26 @@ namespace Airport.API.Controllers
 
         // GET api/crews/5
         [HttpGet("{id}", Name = "GetCrew")]
-        public IActionResult Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            var result = _crewService.GetById(id);
+            var result = await _crewService.GetById(id);
             return Ok(result);
         }
 
         // GET api/crews
         [HttpGet]
-        public IActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            var results = _crewService.GetAll();
+            var results = await _crewService.GetAll();
             return Ok(results);
         }
 
         // POST api/crews
         [HttpPost]
-        public IActionResult Post([FromBody] EditableCrewFields createCrewRequest)
+        public async Task<IActionResult> Post([FromBody] EditableCrewFields createCrewRequest)
         {
-            var insertedId = _crewService.Insert(createCrewRequest);
-            var result = _crewService.GetById(insertedId);
+            var insertedId = await _crewService.Insert(createCrewRequest);
+            var result = await _crewService.GetById(insertedId);
 
             var url = Url.Link("GetCrew", new {id = result.Id});
 
@@ -44,9 +45,9 @@ namespace Airport.API.Controllers
 
         // PUT api/crews/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] EditableCrewFields updateCrewRequest)
+        public async Task<ActionResult> Put(int id, [FromBody] EditableCrewFields updateCrewRequest)
         {
-            var success = _crewService.Update(id, updateCrewRequest);
+            var success = await _crewService.Update(id, updateCrewRequest);
             if (success)
             {
                 return Ok();
@@ -57,9 +58,9 @@ namespace Airport.API.Controllers
 
         // DELETE api/crews/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var success = _crewService.Delete(id);
+            var success = await _crewService.Delete(id);
             if (success)
             {
                 return Ok();

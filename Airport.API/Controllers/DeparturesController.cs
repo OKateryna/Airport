@@ -1,4 +1,5 @@
-﻿using Airport.BL.Abstractions;
+﻿using System.Threading.Tasks;
+using Airport.BL.Abstractions;
 using Airport.BL.Dto.Departure;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,26 +17,26 @@ namespace Airport.API.Controllers
 
         // GET api/departures/5
         [HttpGet("{id}", Name = "GetDeparture")]
-        public IActionResult Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            var result = _departureService.GetById(id);
+            var result = await _departureService.GetById(id);
             return Ok(result);
         }
 
         // GET api/departures
         [HttpGet]
-        public IActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            var results = _departureService.GetAll();
+            var results = await _departureService.GetAll();
             return Ok(results);
         }
 
         // POST api/departures
         [HttpPost]
-        public IActionResult Post([FromBody] EditableDepartureFields createDepartureRequest)
+        public async Task<ActionResult> Post([FromBody] EditableDepartureFields createDepartureRequest)
         {
-            var insertedId = _departureService.Insert(createDepartureRequest);
-            var result = _departureService.GetById(insertedId);
+            var insertedId = await _departureService.Insert(createDepartureRequest);
+            var result = await _departureService.GetById(insertedId);
 
             var url = Url.Link("GetDeparture", new {id = result.Id});
 
@@ -44,9 +45,9 @@ namespace Airport.API.Controllers
 
         // PUT api/departures/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] EditableDepartureFields updateDepartureRequest)
+        public async Task<ActionResult> Put(int id, [FromBody] EditableDepartureFields updateDepartureRequest)
         {
-            var success = _departureService.Update(id, updateDepartureRequest);
+            var success = await _departureService.Update(id, updateDepartureRequest);
             if (success)
             {
                 return Ok();
@@ -57,9 +58,9 @@ namespace Airport.API.Controllers
 
         // DELETE api/departures/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var success = _departureService.Delete(id);
+            var success = await _departureService.Delete(id);
             if (success)
             {
                 return Ok();

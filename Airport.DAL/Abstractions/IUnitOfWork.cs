@@ -1,4 +1,6 @@
-﻿using Airport.DAL.Models;
+﻿using System.Threading.Tasks;
+using Airport.DAL.Models;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Airport.DAL.Abstractions
 {
@@ -12,5 +14,7 @@ namespace Airport.DAL.Abstractions
         IRepository<Crew> CrewRepository { get; }
         IRepository<Plane> PlaneRepository { get; }
         IRepository<PlaneType> PlaneTypeRepository { get; }
+        Task SaveChangesAsync();
+        void SaveChanges();
     }
 }

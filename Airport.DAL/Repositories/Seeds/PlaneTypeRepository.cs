@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Airport.DAL.Models;
 
 namespace Airport.DAL.Repositories.Seeds
@@ -13,17 +14,20 @@ namespace Airport.DAL.Repositories.Seeds
             SeedData.Add(new PlaneType {Id = 4, PlaneModel = "Ту-134", PlacesAmount = 80, CarryingCapacity = 47000});
         }
 
-        public override bool Update(PlaneType planeType)
+        public override async Task<bool> Update(PlaneType planeType)
         {
-            var oldPlaneType = SeedData.FirstOrDefault(pt => pt.Id == planeType.Id);
-            if (oldPlaneType == null)
-                return false;
+            return await Task.Run(() =>
+            {
+                var oldPlaneType = SeedData.FirstOrDefault(pt => pt.Id == planeType.Id);
+                if (oldPlaneType == null)
+                    return false;
 
-            oldPlaneType.CarryingCapacity = planeType.CarryingCapacity;
-            oldPlaneType.PlacesAmount = planeType.PlacesAmount;
-            oldPlaneType.PlaneModel = planeType.PlaneModel;
+                oldPlaneType.CarryingCapacity = planeType.CarryingCapacity;
+                oldPlaneType.PlacesAmount = planeType.PlacesAmount;
+                oldPlaneType.PlaneModel = planeType.PlaneModel;
 
-            return true;
+                return true;
+            });
         }
     }
 }

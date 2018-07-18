@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Airport.DAL.Models;
 
 namespace Airport.DAL.Repositories.Seeds
@@ -47,19 +48,22 @@ namespace Airport.DAL.Repositories.Seeds
         }
 
 
-        public override bool Update(Flight flight)
+        public override async Task<bool> Update(Flight flight)
         {
-            var oldFlight = SeedData.FirstOrDefault(f => f.Id == flight.Id);
-            if (oldFlight == null)
-                return false;
+            return await Task.Run(() =>
+            {
+                var oldFlight = SeedData.FirstOrDefault(f => f.Id == flight.Id);
+                if (oldFlight == null)
+                    return false;
 
-            oldFlight.Destination = flight.Destination;
-            oldFlight.Number = flight.Number;
-            oldFlight.PlaceDeparture = flight.PlaceDeparture;
-            oldFlight.TimeDeparture = flight.TimeDeparture;
-            oldFlight.TimeDestination = flight.TimeDestination;
+                oldFlight.Destination = flight.Destination;
+                oldFlight.Number = flight.Number;
+                oldFlight.PlaceDeparture = flight.PlaceDeparture;
+                oldFlight.TimeDeparture = flight.TimeDeparture;
+                oldFlight.TimeDestination = flight.TimeDestination;
 
-            return true;
+                return true;
+            });
         }
     }
 }

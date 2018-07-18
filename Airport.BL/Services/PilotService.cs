@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Airport.BL.Abstractions;
 using Airport.BL.Dto.Pilot;
 using Airport.DAL.Abstractions;
@@ -19,37 +20,37 @@ namespace Airport.BL.Services
             _mapper = mapper;
         }
 
-        public PilotDto GetById(int id)
+        public async Task<PilotDto> GetById(int id)
         {
-            var pilot = _unitOfWork.PilotRepository.Get(id);
+            var pilot = await _unitOfWork.PilotRepository.Get(id);
             return _mapper.Map<PilotDto>(pilot);
         }
 
-        public IEnumerable<PilotDto> GetAll()
+        public async Task<IEnumerable<PilotDto>> GetAll()
         {
-            var results = _unitOfWork.PilotRepository.GetAll();
+            var results = await _unitOfWork.PilotRepository.GetAll();
             return results.Select(pilot => _mapper.Map<PilotDto>(pilot));
         }
 
-        public int Insert(EditablePilotFields createPilotRequest)
+        public async Task<int> Insert(EditablePilotFields createPilotRequest)
         {
             var entityToUpdate = _mapper.Map<Pilot>(createPilotRequest);
-            _unitOfWork.PilotRepository.Insert(entityToUpdate);
-            _unitOfWork.PilotRepository.Save();
+            await _unitOfWork.PilotRepository.Insert(entityToUpdate);
+            await _unitOfWork.SaveChangesAsync();
 
             return entityToUpdate.Id;
         }
 
-        public bool Update(int id, EditablePilotFields updatePilotRequest)
+        public async Task<bool> Update(int id, EditablePilotFields updatePilotRequest)
         {
             var pilotToUpdate = _mapper.Map<Pilot>(updatePilotRequest);
             pilotToUpdate.Id = id;
-            return _unitOfWork.PilotRepository.Update(pilotToUpdate);
+            return await _unitOfWork.PilotRepository.Update(pilotToUpdate);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            return _unitOfWork.PilotRepository.Delete(id);
+            return await _unitOfWork.PilotRepository.Delete(id);
         }
     }
 }

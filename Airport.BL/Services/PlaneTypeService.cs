@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Airport.BL.Abstractions;
 using Airport.BL.Dto.PlaneType;
 using Airport.DAL.Abstractions;
@@ -19,42 +20,42 @@ namespace Airport.BL.Services
             _mapper = mapper;
         }
 
-        public PlaneTypeDto GetById(int id)
+        public async Task<PlaneTypeDto> GetById(int id)
         {
-            var planeType = _unitOfWork.PlaneTypeRepository.Get(id);
+            var planeType = await _unitOfWork.PlaneTypeRepository.Get(id);
             return _mapper.Map<PlaneTypeDto>(planeType);
         }
 
-        public IEnumerable<PlaneTypeDto> GetAll()
+        public async Task<IEnumerable<PlaneTypeDto>> GetAll()
         {
-            var results = _unitOfWork.PlaneTypeRepository.GetAll();
+            var results = await _unitOfWork.PlaneTypeRepository.GetAll();
             return results.Select(planeType => _mapper.Map<PlaneTypeDto>(planeType));
         }
 
-        public int Insert(EditablePlaneTypeFields createPlaneTypeRequest)
+        public async Task<int> Insert(EditablePlaneTypeFields createPlaneTypeRequest)
         {
             var entityToUpdate = _mapper.Map<PlaneType>(createPlaneTypeRequest);
-            _unitOfWork.PlaneTypeRepository.Insert(entityToUpdate);
-            _unitOfWork.PlaneTypeRepository.Save();
+            await _unitOfWork.PlaneTypeRepository.Insert(entityToUpdate);
+            await _unitOfWork.SaveChangesAsync();
 
             return entityToUpdate.Id;
         }
 
-        public bool Update(int id, EditablePlaneTypeFields updatePlaneTypeRequest)
+        public async Task<bool> Update(int id, EditablePlaneTypeFields updatePlaneTypeRequest)
         {
             var planeTypeToUpdate = _mapper.Map<PlaneType>(updatePlaneTypeRequest);
             planeTypeToUpdate.Id = id;
             var result = _unitOfWork.PlaneTypeRepository.Update(planeTypeToUpdate);
-            _unitOfWork.PlaneTypeRepository.Save();
+            await _unitOfWork.SaveChangesAsync();
 
-            return result;
+            return await result;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             var result = _unitOfWork.PlaneTypeRepository.Delete(id);
-            _unitOfWork.PlaneTypeRepository.Save();
-            return result;
+            await _unitOfWork.SaveChangesAsync();
+            return await result;
         }
     }
 }

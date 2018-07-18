@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Airport.BL.Abstractions;
 using Airport.BL.Dto.Flight;
 using Airport.BL.Dto.Ticket;
@@ -20,42 +21,44 @@ namespace Airport.BL.Services
             _mapper = mapper;
         }
 
-        public TicketDto GetById(int id)
+        public async Task<TicketDto> GetById(int id)
         {
-            var ticket = _unitOfWork.TicketRepository.Get(id);
-            return GetTicketDto(ticket);
+            var ticket = await _unitOfWork.TicketRepository.Get(id);
+            return await GetTicketDto(ticket);
         }
 
-        public IEnumerable<TicketDto> GetAll()
+        public async Task<IEnumerable<TicketDto>> GetAll()
         {
-            var results = _unitOfWork.TicketRepository.GetAll();
-            return results.Select(GetTicketDto);
+            var tickets = await _unitOfWork.TicketRepository.GetAll();
+            var ticketsDtos = await Task.WhenAll(tickets.Select(GetTicketDto));
+
+            return ticketsDtos.Where(t => t != null);
         }
 
-        public int Insert(EditableTicketFields editableTicketFields)
+        public async Task<int> Insert(EditableTicketFields editableTicketFields)
         {
             var entityToUpdate = _mapper.Map<Ticket>(editableTicketFields);
-            _unitOfWork.TicketRepository.Insert(entityToUpdate);
-            _unitOfWork.TicketRepository.Save();
+            await _unitOfWork.TicketRepository.Insert(entityToUpdate);
+            await _unitOfWork.SaveChangesAsync();
 
             return entityToUpdate.Id;
         }
 
-        public bool Update(int id, EditableTicketFields editableTicketFields)
+        public async Task<bool> Update(int id, EditableTicketFields editableTicketFields)
         {
             var ticketToUpdate = _mapper.Map<Ticket>(editableTicketFields);
             ticketToUpdate.Id = id;
-            return _unitOfWork.TicketRepository.Update(ticketToUpdate);
+            return await _unitOfWork.TicketRepository.Update(ticketToUpdate);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            return _unitOfWork.TicketRepository.Delete(id);
+            return await _unitOfWork.TicketRepository.Delete(id);
         }
 
-        private TicketDto GetTicketDto(Ticket ticket)
+        private async Task<TicketDto> GetTicketDto(Ticket ticket)
         {
-            var flight = _unitOfWork.FlightRepository.Get(ticket.FlightId);
+            var flight = await _unitOfWork.FlightRepository.Get(ticket.FlightId);
             var result = _mapper.Map<TicketDto>(ticket);
             result.Flight = _mapper.Map<FlightDto>(flight);
             return result;

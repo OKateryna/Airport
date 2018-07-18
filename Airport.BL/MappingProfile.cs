@@ -17,8 +17,8 @@ namespace Airport.BL
         {
             CreateMap<Flight, EditableFlightFields>();
             CreateMap<EditableFlightFields, Flight>();
-            CreateMap<Flight, FlightDto>();
-            CreateMap<FlightDto, Flight>();
+            CreateMap<Flight, FlightDto>().ForMember(x => x.Tickets, opt => opt.Ignore());
+            CreateMap<FlightDto, Flight>().ForMember(x => x.Tickets, opt => opt.Ignore());
 
             CreateMap<Ticket, EditableTicketFields>();
             CreateMap<EditableTicketFields, Ticket>();

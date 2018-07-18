@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Airport.BL.Abstractions;
 using Airport.BL.Dto.Stewardess;
 using Airport.DAL.Abstractions;
@@ -19,37 +20,38 @@ namespace Airport.BL.Services
             _mapper = mapper;
         }
 
-        public StewardessDto GetById(int id)
+        public async Task<StewardessDto> GetById(int id)
         {
-            var stewardess = _unitOfWork.StewardessRepository.Get(id);
+            var stewardess = await _unitOfWork.StewardessRepository.Get(id);
             return _mapper.Map<StewardessDto>(stewardess);
         }
 
-        public IEnumerable<StewardessDto> GetAll()
+        public async Task<IEnumerable<StewardessDto>> GetAll()
         {
-            var results = _unitOfWork.StewardessRepository.GetAll();
-            return results.Select(stewardess => _mapper.Map<StewardessDto>(stewardess));
+            var stewardesses = await _unitOfWork.StewardessRepository.GetAll();
+            var stewardessesDtos = stewardesses.Select(stewardess => _mapper.Map<StewardessDto>(stewardess));
+            return stewardessesDtos;
         }
 
-        public int Insert(EditableStewardessFields createStewardessRequest)
+        public async Task<int> Insert(EditableStewardessFields createStewardessRequest)
         {
             var entityToUpdate = _mapper.Map<Stewardess>(createStewardessRequest);
-            _unitOfWork.StewardessRepository.Insert(entityToUpdate);
-            _unitOfWork.StewardessRepository.Save();
+            await _unitOfWork.StewardessRepository.Insert(entityToUpdate);
+            await _unitOfWork.SaveChangesAsync();
 
             return entityToUpdate.Id;
         }
 
-        public bool Update(int id, EditableStewardessFields updateStewardessRequest)
+        public async Task<bool> Update(int id, EditableStewardessFields updateStewardessRequest)
         {
             var stewardessToUpdate = _mapper.Map<Stewardess>(updateStewardessRequest);
             stewardessToUpdate.Id = id;
-            return _unitOfWork.StewardessRepository.Update(stewardessToUpdate);
+            return await _unitOfWork.StewardessRepository.Update(stewardessToUpdate);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            return _unitOfWork.StewardessRepository.Delete(id);
+            return await _unitOfWork.StewardessRepository.Delete(id);
         }
     }
 }

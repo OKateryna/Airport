@@ -8,7 +8,7 @@ namespace Airport.API.ValidationRules
     {
         public FlightValidator()
         {
-            RuleFor(flight => flight.TicketId).NotEqual(0);
+            RuleFor(flight => flight.TicketIds).NotNull().NotEmpty();
             RuleFor(flight => flight.Destination).NotNull().NotEmpty();
             RuleFor(flight => flight.Number).NotNull().NotEmpty();
             RuleFor(flight => flight.PlaceDeparture).NotNull().NotEmpty();

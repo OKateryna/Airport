@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Airport.DAL.Models;
 
 namespace Airport.DAL.Repositories.Seeds
@@ -38,16 +39,19 @@ namespace Airport.DAL.Repositories.Seeds
             });
         }
 
-        public override bool Update(Stewardess stewardess)
+        public override async Task<bool> Update(Stewardess stewardess)
         {
-            var oldStewardess = SeedData.FirstOrDefault(s => s.Id == stewardess.Id);
-            if (oldStewardess == null)
-                return false;
+            return await Task.Run(() =>
+            {
+                var oldStewardess = SeedData.FirstOrDefault(s => s.Id == stewardess.Id);
+                if (oldStewardess == null)
+                    return false;
 
-            oldStewardess.FirstName = stewardess.FirstName;
-            oldStewardess.SecondName = stewardess.SecondName;
-            oldStewardess.BirthDate = stewardess.BirthDate;
-            return true;
+                oldStewardess.FirstName = stewardess.FirstName;
+                oldStewardess.SecondName = stewardess.SecondName;
+                oldStewardess.BirthDate = stewardess.BirthDate;
+                return true;
+            });
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Airport.BL.Abstractions;
+﻿using System.Threading.Tasks;
+using Airport.BL.Abstractions;
 using Airport.BL.Dto.Flight;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,26 +17,26 @@ namespace Airport.API.Controllers
 
         // GET api/flights/5
         [HttpGet("{id}", Name = "GetFlight")]
-        public IActionResult Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            var result = _flightService.GetById(id);
+            var result = await _flightService.GetById(id);
             return Ok(result);
         }
 
         // GET api/flights
         [HttpGet]
-        public IActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            var results = _flightService.GetAll();
+            var results = await _flightService.GetAll();
             return Ok(results);
         }
 
         // POST api/flights
         [HttpPost]
-        public IActionResult Post([FromBody] EditableFlightFields createFlightRequest)
+        public async Task<ActionResult> Post([FromBody] EditableFlightFields createFlightRequest)
         {
-            var insertedId = _flightService.Insert(createFlightRequest);
-            var result = _flightService.GetById(insertedId);
+            var insertedId = await _flightService.Insert(createFlightRequest);
+            var result = await _flightService.GetById(insertedId);
 
             var url = Url.Link("GetFlight", new {id = result.Id});
 
@@ -44,9 +45,9 @@ namespace Airport.API.Controllers
 
         // PUT api/flights/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] EditableFlightFields updateFlightRequest)
+        public async Task<ActionResult> Put(int id, [FromBody] EditableFlightFields updateFlightRequest)
         {
-            var success = _flightService.Update(id, updateFlightRequest);
+            var success = await _flightService.Update(id, updateFlightRequest);
             if (success)
             {
                 return Ok();
@@ -57,9 +58,9 @@ namespace Airport.API.Controllers
 
         // DELETE api/flights/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var success = _flightService.Delete(id);
+            var success = await _flightService.Delete(id);
             if (success)
             {
                 return Ok();

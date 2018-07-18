@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Airport.DAL.Abstractions;
 using Airport.DAL.Models;
 
@@ -14,37 +15,39 @@ namespace Airport.DAL.Repositories.Seeds
             SeedData = new List<T>();
         }
 
-        public T Get(int id)
+        public async Task<T> Get(int id)
         {
-            return SeedData.FirstOrDefault(x => x.Id == id);
+            var result = new Task<T>(() => SeedData.FirstOrDefault(x => x.Id == id));
+            return await result;
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return SeedData;
+            return await Task.Run(() => SeedData);
         }
 
-        public void Insert(T createEntity)
+        public async Task Insert(T createEntity)
         {
-            createEntity.Id = SeedData.Max(x => x.Id);
-            SeedData.Add(createEntity);
+            await Task.Run(() =>
+            {
+                createEntity.Id = SeedData.Max(x => x.Id);
+                SeedData.Add(createEntity);
+            });
         }
 
-        public abstract bool Update(T updateEntity);
+        public abstract Task<bool> Update(T updateEntity);
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            var entityToDelete = SeedData.FirstOrDefault(x => x.Id == id);
-            if (entityToDelete == null)
-                return false;
+            return await Task.Run(() => 
+            {
+                var entityToDelete = SeedData.FirstOrDefault(x => x.Id == id);
+                if (entityToDelete == null)
+                    return false;
 
-            SeedData.Remove(entityToDelete);
-            return true;
-        }
-
-        public void Save()
-        {
-
+                SeedData.Remove(entityToDelete);
+                return true;
+            });
         }
     }
 }

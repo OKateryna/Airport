@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Airport.BL.Dto.Flight;
 
 namespace Airport.BL.Abstractions
 {
     public interface IFlightService
     {
-        FlightDto GetById(int id);
-        IEnumerable<FlightDto> GetAll();
-        int Insert(EditableFlightFields createFlightRequest);
-        bool Update(int id, EditableFlightFields updateFlightRequest);
-        bool Delete(int id);
+        Task<FlightDto> GetById(int id);
+        Task<IEnumerable<FlightDto>> GetAll();
+        Task<int> Insert(EditableFlightFields createFlightRequest);
+        Task<bool> Update(int id, EditableFlightFields updateFlightRequest);
+        Task<bool> Delete(int id);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Airport.BL.Abstractions;
 using Airport.BL.Dto.Crew;
 using Airport.BL.Dto.Departure;
@@ -26,63 +27,64 @@ namespace Airport.BL.Services
             _mapper = mapper;
         }
 
-        public DepartureDto GetById(int id)
+        public async Task<DepartureDto> GetById(int id)
         {
-            var departure = _unitOfWork.DepartureRepository.Get(id);
-            return GetDepartureDto(departure);
+            var departure = await _unitOfWork.DepartureRepository.Get(id);
+            return await GetDepartureDto(departure);
         }
 
-        public IEnumerable<DepartureDto> GetAll()
+        public async Task<IEnumerable<DepartureDto>> GetAll()
         {
-            var results = _unitOfWork.DepartureRepository.GetAll();
-            return results.Select(GetDepartureDto);
+            var departures = await _unitOfWork.DepartureRepository.GetAll();
+            var departuresDtos = await Task.WhenAll(departures.Select(GetDepartureDto));
+            return departuresDtos.Where(x => x != null);
         }
 
-        public int Insert(EditableDepartureFields createDepartureRequest)
+        public async Task<int> Insert(EditableDepartureFields createDepartureRequest)
         {
             var entityToUpdate = _mapper.Map<Departure>(createDepartureRequest);
-            _unitOfWork.DepartureRepository.Insert(entityToUpdate);
-            _unitOfWork.DepartureRepository.Save();
+            await _unitOfWork.DepartureRepository.Insert(entityToUpdate);
+            await _unitOfWork.SaveChangesAsync();
 
             return entityToUpdate.Id;
         }
 
-        public bool Update(int id, EditableDepartureFields updateDepartureRequest)
+        public async Task<bool> Update(int id, EditableDepartureFields updateDepartureRequest)
         {
             var departureToUpdate = _mapper.Map<Departure>(updateDepartureRequest);
             departureToUpdate.Id = id;
-            return _unitOfWork.DepartureRepository.Update(departureToUpdate);
+            return await _unitOfWork.DepartureRepository.Update(departureToUpdate);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            return _unitOfWork.DepartureRepository.Delete(id);
+            return await _unitOfWork.DepartureRepository.Delete(id);
         }
 
-        private DepartureDto GetDepartureDto(Departure departure)
+        private async Task<DepartureDto> GetDepartureDto(Departure departure)
         {
-            var flight = _unitOfWork.FlightRepository.Get(departure.FlightId);
-            var crew = _unitOfWork.CrewRepository.Get(departure.CrewId);
-            var plane = _unitOfWork.PlaneRepository.Get(departure.PlaneId);
+            var flight = await _unitOfWork.FlightRepository.Get(departure.FlightId);
+            var crew = await _unitOfWork.CrewRepository.Get(departure.CrewId);
+            var plane = await _unitOfWork.PlaneRepository.Get(departure.PlaneId);
             var result = _mapper.Map<DepartureDto>(departure);
-            result.Flight = GetFlightDto(flight);
-            result.Plane = GetPlaneDto(plane);
+            result.Flight = await GetFlightDto(flight);
+            result.Plane = await GetPlaneDto(plane);
             result.Crew = _mapper.Map<CrewDto>(crew);
             
             return result;
         }
 
-        private PlaneDto GetPlaneDto(Plane plane)
+        private async Task<PlaneDto> GetPlaneDto(Plane plane)
         {
-            var planeType = _unitOfWork.PlaneTypeRepository.Get(plane.PlaneTypeId);
+            var planeType = await _unitOfWork.PlaneTypeRepository.Get(plane.PlaneTypeId);
             var result = _mapper.Map<PlaneDto>(plane);
             result.PlaneType = _mapper.Map<PlaneTypeDto>(planeType);
             return result;
         }
 
-        private FlightDto GetFlightDto(Flight flight)
+        private async Task<FlightDto> GetFlightDto(Flight flight)
         {
-            var tickets = _unitOfWork.TicketRepository.GetAll().Where(x => x.FlightId == flight.Id);
+            var tickets = (await _unitOfWork.TicketRepository.GetAll()).Where(x => x.FlightId == flight.Id);
             var result = _mapper.Map<FlightDto>(flight);
             result.Tickets = tickets.Select(ticket => _mapper.Map<TicketDto>(ticket)).ToList();
             return result;

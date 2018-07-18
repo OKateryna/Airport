@@ -1,4 +1,5 @@
-﻿using Airport.BL.Abstractions;
+﻿using System.Threading.Tasks;
+using Airport.BL.Abstractions;
 using Airport.BL.Dto.PlaneType;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,26 +17,26 @@ namespace Airport.API.Controllers
 
         // GET api/planeTypes/5
         [HttpGet("{id}", Name = "GetPlaneType")]
-        public IActionResult Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            var result = _planeTypeService.GetById(id);
+            var result = await _planeTypeService.GetById(id);
             return Ok(result);
         }
 
         // GET api/planeTypes
         [HttpGet]
-        public IActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            var results = _planeTypeService.GetAll();
+            var results = await _planeTypeService.GetAll();
             return Ok(results);
         }
 
         // POST api/planeTypes
         [HttpPost]
-        public IActionResult Post([FromBody] EditablePlaneTypeFields createPlaneTypeRequest)
+        public async Task<ActionResult> Post([FromBody] EditablePlaneTypeFields createPlaneTypeRequest)
         {
-            var insertedId = _planeTypeService.Insert(createPlaneTypeRequest);
-            var result = _planeTypeService.GetById(insertedId);
+            var insertedId = await _planeTypeService.Insert(createPlaneTypeRequest);
+            var result = await _planeTypeService.GetById(insertedId);
 
             var url = Url.Link("GetPlaneType", new {id = result.Id});
 
@@ -44,9 +45,9 @@ namespace Airport.API.Controllers
 
         // PUT api/planeTypes/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] EditablePlaneTypeFields updatePlaneTypeRequest)
+        public async Task<ActionResult> Put(int id, [FromBody] EditablePlaneTypeFields updatePlaneTypeRequest)
         {
-            var success = _planeTypeService.Update(id, updatePlaneTypeRequest);
+            var success = await _planeTypeService.Update(id, updatePlaneTypeRequest);
             if (success)
             {
                 return Ok();
@@ -57,9 +58,9 @@ namespace Airport.API.Controllers
 
         // DELETE api/planeTypes/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var success = _planeTypeService.Delete(id);
+            var success = await _planeTypeService.Delete(id);
             if (success)
             {
                 return Ok();

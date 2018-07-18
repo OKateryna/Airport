@@ -1,4 +1,5 @@
-﻿using Airport.BL.Abstractions;
+﻿using System.Threading.Tasks;
+using Airport.BL.Abstractions;
 using Airport.BL.Dto.Pilot;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,26 +17,26 @@ namespace Airport.API.Controllers
 
         // GET api/pilots/5
         [HttpGet("{id}", Name = "GetPilot")]
-        public IActionResult Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            var result = _pilotService.GetById(id);
+            var result = await _pilotService.GetById(id);
             return Ok(result);
         }
 
         // GET api/pilots
         [HttpGet]
-        public IActionResult Get()
+        public async Task<ActionResult> Get()
         {
-            var results = _pilotService.GetAll();
+            var results = await _pilotService.GetAll();
             return Ok(results);
         }
 
         // POST api/pilots
         [HttpPost]
-        public IActionResult Post([FromBody] EditablePilotFields createPilotRequest)
+        public async Task<ActionResult> Post([FromBody] EditablePilotFields createPilotRequest)
         {
-            var insertedId = _pilotService.Insert(createPilotRequest);
-            var result = _pilotService.GetById(insertedId);
+            var insertedId = await _pilotService.Insert(createPilotRequest);
+            var result = await _pilotService.GetById(insertedId);
 
             var url = Url.Link("GetPilot", new {id = result.Id});
 
@@ -44,9 +45,9 @@ namespace Airport.API.Controllers
 
         // PUT api/pilots/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] EditablePilotFields updatePilotRequest)
+        public async Task<ActionResult> Put(int id, [FromBody] EditablePilotFields updatePilotRequest)
         {
-            var success = _pilotService.Update(id, updatePilotRequest);
+            var success = await _pilotService.Update(id, updatePilotRequest);
             if (success)
             {
                 return Ok();
@@ -57,9 +58,9 @@ namespace Airport.API.Controllers
 
         // DELETE api/pilots/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var success = _pilotService.Delete(id);
+            var success = await _pilotService.Delete(id);
             if (success)
             {
                 return Ok();

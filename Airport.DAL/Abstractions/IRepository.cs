@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Airport.DAL.Models;
 
 namespace Airport.DAL.Abstractions
 {
     public interface IRepository<T>
     {
-        T Get(int id);
-        IEnumerable<T> GetAll();
-        void Insert(T createEntity);
-        bool Update(T updateEntity);
-        bool Delete(int id);
-        void Save();
+        Task<T> Get(int id);
+        Task<IEnumerable<T>> GetAll();
+        Task Insert(T createEntity);
+        Task<bool> Update(T updateEntity);
+        Task<bool> Delete(int id);
     }
 }

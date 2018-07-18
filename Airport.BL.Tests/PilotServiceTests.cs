@@ -1,4 +1,5 @@
-﻿using Airport.BL.Dto.Pilot;
+﻿using System.Threading.Tasks;
+using Airport.BL.Dto.Pilot;
 using Airport.BL.Services;
 using Airport.DAL.Models;
 using AutoMapper;
@@ -28,12 +29,12 @@ namespace Airport.BL.Tests
         }
 
         [Test]
-        public void ReturnsDtoWithCorrectId()
+        public async Task ReturnsDtoWithCorrectId()
         {
             var uow = MoqSetup.GetFakeUnitOfWork();
             var pilotService = new PilotService(uow, _mapper);
 
-            var pilot = pilotService.GetById(5);
+            var pilot = await pilotService.GetById(5);
             Assert.AreEqual(5, pilot.Id);
         }
     }

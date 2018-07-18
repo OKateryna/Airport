@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Airport.DAL.Models;
 
 namespace Airport.DAL.Repositories.Seeds
@@ -13,16 +14,19 @@ namespace Airport.DAL.Repositories.Seeds
             SeedData.Add(new Ticket {Id = 4, FlightId = 3, Price = 100});
         }
         
-        public override bool Update(Ticket ticket)
+        public override async Task<bool> Update(Ticket ticket)
         {
-            var oldPlane = SeedData.FirstOrDefault(p => p.Id == ticket.Id);
-            if (oldPlane == null)
-                return false;
+            return await Task.Run(() =>
+            {
+                var oldPlane = SeedData.FirstOrDefault(p => p.Id == ticket.Id);
+                if (oldPlane == null)
+                    return false;
 
-            oldPlane.Price = ticket.Price;
-            oldPlane.FlightId = ticket.FlightId;
+                oldPlane.Price = ticket.Price;
+                oldPlane.FlightId = ticket.FlightId;
 
-            return true;
+                return true;
+            });
         }
     }
 }
