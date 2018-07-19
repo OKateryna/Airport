@@ -20,6 +20,9 @@ namespace Airport.API.Controllers
         public async Task<ActionResult> Get(int id)
         {
             var result = await _pilotService.GetById(id);
+            if (result == null)
+                return NoContent();
+
             return Ok(result);
         }
 

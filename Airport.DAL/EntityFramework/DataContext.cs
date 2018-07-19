@@ -215,7 +215,7 @@ namespace Airport.DAL.EntityFramework
                     FirstName = "Oleg",
                     SecondName = "Petrenko",
                     BirthDate = new DateTime(1980, 6, 5),
-                    Expierence = 8
+                    Experience = 8
                 },
                 new Pilot
                 {
@@ -223,7 +223,7 @@ namespace Airport.DAL.EntityFramework
                     FirstName = "Ihor",
                     SecondName = "Vitrenko",
                     BirthDate = new DateTime(1987, 1, 19),
-                    Expierence = 4
+                    Experience = 4
                 },
                 new Pilot
                 {
@@ -231,7 +231,7 @@ namespace Airport.DAL.EntityFramework
                     FirstName = "Taras",
                     SecondName = "Boiko",
                     BirthDate = new DateTime(1960, 10, 2),
-                    Expierence = 31
+                    Experience = 31
                 },
                 new Pilot
                 {
@@ -239,7 +239,7 @@ namespace Airport.DAL.EntityFramework
                     FirstName = "Viktor",
                     SecondName = "Romaniuk",
                     BirthDate = new DateTime(1992, 11, 27),
-                    Expierence = 2
+                    Experience = 2
                 }
             );
 

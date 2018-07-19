@@ -20,6 +20,9 @@ namespace Airport.API.Controllers
         public async Task<ActionResult> Get(int id)
         {
             var result = await _stewardessService.GetById(id);
+            if (result == null)
+                return NoContent();
+
             return Ok(result);
         }
 
@@ -28,6 +31,7 @@ namespace Airport.API.Controllers
         public async Task<ActionResult> Get()
         {
             var results = await _stewardessService.GetAll();
+            
             return Ok(results);
         }
 

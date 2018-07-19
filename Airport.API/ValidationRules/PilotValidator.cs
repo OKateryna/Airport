@@ -9,10 +9,10 @@ namespace Airport.API.ValidationRules
     {
         public PilotValidator()
         {
-            RuleFor(pilot => pilot.BirthDate).NotNull().GreaterThanOrEqualTo(DateTime.Now.AddYears(-50));
+            RuleFor(pilot => pilot.BirthDate).NotNull().GreaterThanOrEqualTo(DateTime.Now.AddYears(-50)).LessThan(DateTime.Now.AddYears(-20));
             RuleFor(pilot => pilot.FirstName).NotNull().NotEmpty();
             RuleFor(pilot => pilot.SecondName).NotNull().NotEmpty();
-            RuleFor(pilot => pilot.Expierence).GreaterThanOrEqualTo(0);
+            RuleFor(pilot => pilot.Experience).GreaterThanOrEqualTo(0);
         }
     }
 }

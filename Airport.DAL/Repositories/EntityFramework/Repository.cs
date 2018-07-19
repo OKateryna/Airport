@@ -35,18 +35,30 @@ namespace Airport.DAL.Repositories.EntityFramework
 
         public async Task<bool> Update(T updateEntity)
         {
+            var existingEntity = await _dbSet.FindAsync(updateEntity.Id);
             return await Task.Run(() =>
             {
-                _context.Entry(updateEntity).State = EntityState.Modified;
-                return true;
+                if (existingEntity != null)
+                {
+                    _context.Entry(existingEntity).State = EntityState.Detached;
+                    _context.Entry(updateEntity).State = EntityState.Modified;
+                    return true;
+                }
+
+                return false;
             });
         }
 
         public async Task<bool> Delete(int id)
         {
             T getObjById = await _dbSet.FindAsync(id);
-            _dbSet.Remove(getObjById);
-            return true;
+            if (getObjById != null)
+            {
+                _dbSet.Remove(getObjById);
+                return true;
+            }
+
+            return false;
         }
 
         public void Dispose()

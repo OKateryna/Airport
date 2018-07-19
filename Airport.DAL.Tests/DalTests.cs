@@ -34,7 +34,7 @@ namespace Airport.DAL.IntegrationTests
             Pilot testPilot = new Pilot
             {
                 BirthDate = new DateTime(2000, 11, 1),
-                Expierence = 2,
+                Experience = 2,
                 FirstName = "Jonh",
                 SecondName = "Smith"
             };
@@ -59,7 +59,7 @@ namespace Airport.DAL.IntegrationTests
             Pilot pilotToAdd = new Pilot
             {
                 BirthDate = birthDay,
-                Expierence = exp,
+                Experience = exp,
                 FirstName = firstName,
                 SecondName = secondName
             };
@@ -69,7 +69,7 @@ namespace Airport.DAL.IntegrationTests
 
             var pilotFromDb = _dataContext.Pilots.Find(pilotToAdd.Id);
             Assert.AreEqual(birthDay, pilotFromDb.BirthDate);
-            Assert.AreEqual(exp, pilotFromDb.Expierence);
+            Assert.AreEqual(exp, pilotFromDb.Experience);
             Assert.AreEqual(firstName, pilotFromDb.FirstName);
             Assert.AreEqual(secondName, pilotFromDb.SecondName);
         }
@@ -80,7 +80,7 @@ namespace Airport.DAL.IntegrationTests
             Pilot testPilot = new Pilot
             {
                 BirthDate = new DateTime(2000, 11, 1),
-                Expierence = 2,
+                Experience = 2,
                 FirstName = "Jonh",
                 SecondName = "Smith"
             };
@@ -112,7 +112,7 @@ namespace Airport.DAL.IntegrationTests
             Pilot testPilot = new Pilot
             {
                 BirthDate = new DateTime(2000, 11, 1),
-                Expierence = 2,
+                Experience = 2,
                 FirstName = "Jonh",
                 SecondName = "Smith"
             };
@@ -287,7 +287,7 @@ namespace Airport.DAL.IntegrationTests
             Pilot testPilot = new Pilot
             {
                 BirthDate = new DateTime(2000, 11, 1),
-                Expierence = 2,
+                Experience = 2,
                 FirstName = "Jonh",
                 SecondName = "Smith"
             };
@@ -295,7 +295,7 @@ namespace Airport.DAL.IntegrationTests
             Pilot testPilot2 = new Pilot
             {
                 BirthDate = new DateTime(1999, 1, 1),
-                Expierence = 10,
+                Experience = 10,
                 FirstName = "Abdula",
                 SecondName = "Ichma"
             };
@@ -336,7 +336,7 @@ namespace Airport.DAL.IntegrationTests
             Pilot testPilot = new Pilot
             {
                 BirthDate = new DateTime(2000, 11, 1),
-                Expierence = 2,
+                Experience = 2,
                 FirstName = "Jonh",
                 SecondName = "Smith"
             };

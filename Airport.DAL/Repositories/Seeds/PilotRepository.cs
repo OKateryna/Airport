@@ -15,7 +15,7 @@ namespace Airport.DAL.Repositories.Seeds
                 FirstName = "Oleg",
                 SecondName = "Petrenko",
                 BirthDate = new DateTime(1980, 6, 5),
-                Expierence = 8
+                Experience = 8
             });
             SeedData.Add(new Pilot
             {
@@ -23,7 +23,7 @@ namespace Airport.DAL.Repositories.Seeds
                 FirstName = "Ihor",
                 SecondName = "Vitrenko",
                 BirthDate = new DateTime(1987, 1, 19),
-                Expierence = 4
+                Experience = 4
             });
             SeedData.Add(new Pilot
             {
@@ -31,7 +31,7 @@ namespace Airport.DAL.Repositories.Seeds
                 FirstName = "Taras",
                 SecondName = "Boiko",
                 BirthDate = new DateTime(1960, 10, 2),
-                Expierence = 31
+                Experience = 31
             });
             SeedData.Add(new Pilot
             {
@@ -39,7 +39,7 @@ namespace Airport.DAL.Repositories.Seeds
                 FirstName = "Viktor",
                 SecondName = "Romaniuk",
                 BirthDate = new DateTime(1992, 11, 27),
-                Expierence = 2
+                Experience = 2
             });
         }
 
@@ -51,7 +51,7 @@ namespace Airport.DAL.Repositories.Seeds
                 if (oldPilot == null)
                     return false;
 
-                oldPilot.Expierence = pilot.Expierence;
+                oldPilot.Experience = pilot.Experience;
                 return true;
             });
         }

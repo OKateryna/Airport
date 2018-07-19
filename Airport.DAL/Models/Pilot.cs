@@ -13,7 +13,7 @@ namespace Airport.DAL.Models
         [Required]
         public DateTime BirthDate { get; set; }
         [Required]
-        public int Expierence { get; set; }
+        public int Experience { get; set; }
         public virtual ICollection<CrewPilot> CrewPilots { get; set; }
     }
 }
