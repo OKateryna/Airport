@@ -36,17 +36,15 @@ namespace Airport.DAL.Repositories.EntityFramework
         public async Task<bool> Update(T updateEntity)
         {
             var existingEntity = await _dbSet.FindAsync(updateEntity.Id);
-            return await Task.Run(() =>
+            
+            if (existingEntity != null)
             {
-                if (existingEntity != null)
-                {
-                    _context.Entry(existingEntity).State = EntityState.Detached;
-                    _context.Entry(updateEntity).State = EntityState.Modified;
-                    return true;
-                }
+                _context.Entry(existingEntity).State = EntityState.Detached;
+                _context.Entry(updateEntity).State = EntityState.Modified;
+                return true;
+            }
 
-                return false;
-            });
+            return false;
         }
 
         public async Task<bool> Delete(int id)

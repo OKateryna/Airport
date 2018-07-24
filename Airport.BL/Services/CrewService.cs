@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Airport.BL.Abstractions;
 using Airport.BL.Dto.Crew;
@@ -9,6 +12,8 @@ using Airport.BL.Dto.Stewardess;
 using Airport.DAL.Abstractions;
 using Airport.DAL.Models;
 using AutoMapper;
+using Newtonsoft.Json;
+using ServiceStack.Text;
 
 namespace Airport.BL.Services
 {
@@ -16,6 +21,8 @@ namespace Airport.BL.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private const string CsvFolder = @"CsvData\";
+        private const string CsvFileTemplate = "CrewsCsv_{0}.csv";
 
         public CrewService(IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -77,19 +84,24 @@ namespace Airport.BL.Services
 
         private async Task<bool> UpdateCrew(Crew crew, EditableCrewFields editableCrewFields)
         {
-            crew.CrewPilot = new CrewPilot
+            return await UpdateCrew(crew, editableCrewFields.PilotId, editableCrewFields.StewardessIds);
+        }
+
+        private async Task<bool> UpdateCrew(Crew crewToUpdate, int pilotId, IEnumerable<int> stewardessesIds)
+        {
+            crewToUpdate.CrewPilot = new CrewPilot
             {
-                CrewId = crew.Id,
-                PilotId = editableCrewFields.PilotId
+                CrewId = crewToUpdate.Id,
+                PilotId = pilotId
             };
 
-            crew.CrewStewardesses = editableCrewFields.StewardessIds.Select(x => new CrewStewardess
+            crewToUpdate.CrewStewardesses = stewardessesIds.Select(x => new CrewStewardess
             {
-                CrewId = crew.Id,
+                CrewId = crewToUpdate.Id,
                 StewardessId = x
             }).ToList();
 
-            var updateResult = await _unitOfWork.CrewRepository.Update(crew);
+            var updateResult = await _unitOfWork.CrewRepository.Update(crewToUpdate);
             await _unitOfWork.SaveChangesAsync();
 
             return updateResult;
@@ -100,15 +112,71 @@ namespace Airport.BL.Services
             return await _unitOfWork.CrewRepository.Delete(id);
         }
 
-        //private CrewDto GetCrewDto(Crew crew)
-        //{
-        //    var pilot = _unitOfWork.PilotRepository.Get(crew.PilotId);
-        //    var stewardesses = _unitOfWork.StewardessRepository.GetAll().Where(x => crew.StewardessIds.Contains(x.Id));
-        //    var result = _mapper.Map<CrewDto>(crew);
-        //    result.Pilot = _mapper.Map<PilotDto>(pilot);
-        //    result.Stewardesses = stewardesses.Select(stewardess => _mapper.Map<StewardessDto>(stewardess));
+        public async Task SaveFromExternalApi()
+        {
+            HttpClient client = new HttpClient();
+            HttpResponseMessage response = await client.GetAsync("http://5b128555d50a5c0014ef1204.mockapi.io/crew");
+            List<CrewExternalDto> crewsFromApi = null;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                HttpContent responseContent = response.Content;
+                var json = await responseContent.ReadAsStringAsync();
+                crewsFromApi = JsonConvert.DeserializeObject<List<CrewExternalDto>>(json).Take(10).ToList();
+            }
+            else
+            {
+                throw new AggregateException("Could not get a correct response from the server.");
+            }
 
-        //    return result;
-        //}
+            await Task.WhenAll(SaveInDatabase(crewsFromApi), WriteToCsv(crewsFromApi));
+        }
+
+        private async Task SaveInDatabase(List<CrewExternalDto> externalCrewDtos)
+        {
+            foreach (var externalCrewDto in externalCrewDtos)
+            {
+                // Insert pilot
+                var pilot = externalCrewDto.Pilot.FirstOrDefault();
+                var pilotToInsert = _mapper.Map<Pilot>(pilot);
+                await _unitOfWork.PilotRepository.Insert(pilotToInsert);
+                
+                // Insert stewardesses
+                var stewardesses = externalCrewDto.Stewardess;
+                var stewardessesToInsert = stewardesses.Select(x =>
+                {
+                    var stewardess = _mapper.Map<Stewardess>(x);
+                    return stewardess;
+                }).ToList();
+
+                await Task.WhenAll(stewardessesToInsert.Select(stewardessToInsert =>
+                    _unitOfWork.StewardessRepository.Insert(stewardessToInsert)));
+
+                // Save to generate Id's
+                await _unitOfWork.SaveChangesAsync();
+
+                // Insert crew
+                var crewToInsert = _mapper.Map<Crew>(externalCrewDto);
+
+                await _unitOfWork.CrewRepository.Insert(crewToInsert);
+                await _unitOfWork.SaveChangesAsync();
+                // Update crew
+                await UpdateCrew(crewToInsert, pilotToInsert.Id, stewardessesToInsert.Select(x => x.Id));
+            }
+        }
+
+        private async Task WriteToCsv(List<CrewExternalDto> externalCrewDtos)
+        {
+            string path = Path.Combine(Environment.CurrentDirectory, CsvFolder, string.Format(CsvFileTemplate, DateTime.Now.ToString("dd-MM-yy___H-mm")));
+            if (!Directory.Exists(Path.GetDirectoryName(path)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
+
+            using (StreamWriter wrt = new StreamWriter(path))
+            {
+                var csv = CsvSerializer.SerializeToCsv(externalCrewDtos);
+                await wrt.WriteLineAsync(csv);
+            }
+        }
     }
 }

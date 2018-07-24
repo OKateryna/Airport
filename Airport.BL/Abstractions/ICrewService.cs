@@ -11,5 +11,6 @@ namespace Airport.BL.Abstractions
         Task<int> Insert(EditableCrewFields createCrewRequest);
         Task<bool> Update(int id, EditableCrewFields updateCrewRequest);
         Task<bool> Delete(int id);
+        Task SaveFromExternalApi();
     }
 }

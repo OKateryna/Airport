@@ -34,6 +34,14 @@ namespace Airport.API.Controllers
             return Ok(results);
         }
 
+        // GET api/crews/loadapi
+        [HttpGet("loadapi")]
+        public async Task<ActionResult> LoadFromApi()
+        {
+            await _crewService.SaveFromExternalApi();
+            return Ok();
+        }
+
         // POST api/crews
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] EditableCrewFields createCrewRequest)

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Airport.BL.Abstractions;
 using Airport.BL.Dto.Flight;
+using Airport.BL.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airport.API.Controllers
@@ -30,7 +31,7 @@ namespace Airport.API.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
-            var results = await _flightService.GetAll();
+            var results = await _flightService.GetFlightsWithDelay();
             return Ok(results);
         }
 
