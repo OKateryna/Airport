@@ -12,6 +12,7 @@ using Airport.DAL.Repositories.Seeds;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,7 @@ namespace Airport.API
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddCors()
                 .AddMvc(opt => opt.Filters.Add(typeof(ValidatorActionFilter)))
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
@@ -49,6 +51,7 @@ namespace Airport.API
             services.AddScoped<ITicketService, TicketService>();
             services.AddScoped<IStewardessService, StewardessService>();
             services.AddScoped<IPilotService, PilotService>();
+            services.AddScoped<IPlaneService, PlaneService>();
             services.AddScoped<IPlaneTypeService, PlaneTypeService>();
             services.AddScoped<ICrewService, CrewService>();
             services.AddScoped<IDepartureService, DepartureService>();
@@ -89,6 +92,12 @@ namespace Airport.API
             {
                 app.UseHsts();
             }
+
+            app.UseCors(builder =>
+                builder.WithOrigins("http://localhost:51099")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin());
 
             app.UseHttpsRedirection();
             app.UseMvc();

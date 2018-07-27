@@ -62,13 +62,18 @@ namespace Airport.BL.Services
         {
             var flightToUpdate = _mapper.Map<Flight>(updateFlightRequest);
             flightToUpdate.Id = id;
+            var result = await UpdateFlight(flightToUpdate, updateFlightRequest);
+            await _unitOfWork.SaveChangesAsync();
 
-            return await UpdateFlight(flightToUpdate, updateFlightRequest);
+            return result;
         }
 
         public async Task<bool> Delete(int id)
         {
-            return await _unitOfWork.FlightRepository.Delete(id);
+            var result = await _unitOfWork.FlightRepository.Delete(id);
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         private async Task<FlightDto> GetFlightDto(Flight flight)

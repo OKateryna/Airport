@@ -53,12 +53,18 @@ namespace Airport.BL.Services
         {
             var departureToUpdate = _mapper.Map<Departure>(updateDepartureRequest);
             departureToUpdate.Id = id;
-            return await _unitOfWork.DepartureRepository.Update(departureToUpdate);
+            var result = await _unitOfWork.DepartureRepository.Update(departureToUpdate);
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         public async Task<bool> Delete(int id)
         {
-            return await _unitOfWork.DepartureRepository.Delete(id);
+            var result = await _unitOfWork.DepartureRepository.Delete(id);
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         private async Task<DepartureDto> GetDepartureDto(Departure departure)

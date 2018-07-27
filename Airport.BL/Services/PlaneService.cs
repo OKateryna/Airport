@@ -49,12 +49,18 @@ namespace Airport.BL.Services
         {
             var planeToUpdate = _mapper.Map<Plane>(updatePlaneRequest);
             planeToUpdate.Id = id;
-            return await _unitOfWork.PlaneRepository.Update(planeToUpdate);
+            var result = await _unitOfWork.PlaneRepository.Update(planeToUpdate);
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         public async Task<bool> Delete(int id)
         {
-            return await _unitOfWork.PlaneRepository.Delete(id);
+            var result = await _unitOfWork.PlaneRepository.Delete(id);
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         private async Task<PlaneDto> GetPlaneDto(Plane plane)

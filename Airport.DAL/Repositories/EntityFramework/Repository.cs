@@ -40,6 +40,7 @@ namespace Airport.DAL.Repositories.EntityFramework
             if (existingEntity != null)
             {
                 _context.Entry(existingEntity).State = EntityState.Detached;
+                _context.Update(updateEntity);
                 _context.Entry(updateEntity).State = EntityState.Modified;
                 return true;
             }

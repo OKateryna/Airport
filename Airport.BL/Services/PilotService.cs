@@ -45,12 +45,18 @@ namespace Airport.BL.Services
         {
             var pilotToUpdate = _mapper.Map<Pilot>(updatePilotRequest);
             pilotToUpdate.Id = id;
-            return await _unitOfWork.PilotRepository.Update(pilotToUpdate);
+            var result = await _unitOfWork.PilotRepository.Update(pilotToUpdate);
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         public async Task<bool> Delete(int id)
         {
-            return await _unitOfWork.PilotRepository.Delete(id);
+            var result = await _unitOfWork.PilotRepository.Delete(id);
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
     }
 }

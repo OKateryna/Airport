@@ -48,12 +48,18 @@ namespace Airport.BL.Services
         {
             var ticketToUpdate = _mapper.Map<Ticket>(editableTicketFields);
             ticketToUpdate.Id = id;
-            return await _unitOfWork.TicketRepository.Update(ticketToUpdate);
+            var result = await _unitOfWork.TicketRepository.Update(ticketToUpdate);
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         public async Task<bool> Delete(int id)
         {
-            return await _unitOfWork.TicketRepository.Delete(id);
+            var result = await _unitOfWork.TicketRepository.Delete(id);
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         private async Task<TicketDto> GetTicketDto(Ticket ticket)

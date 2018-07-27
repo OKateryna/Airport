@@ -109,7 +109,10 @@ namespace Airport.BL.Services
 
         public async Task<bool> Delete(int id)
         {
-            return await _unitOfWork.CrewRepository.Delete(id);
+            var result = await _unitOfWork.CrewRepository.Delete(id);
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         public async Task SaveFromExternalApi()
